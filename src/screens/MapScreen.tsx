@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
-  Platform,
   Pressable,
   Text,
   View,
@@ -27,7 +26,7 @@ import RouteLayer from '../components/map/RouteLayer';
 import RouteSheet from '../components/map/RouteSheet';
 import UserMarker from '../components/map/UserMarker';
 import { DEFAULT_CENTER } from '../config/map';
-import { MAP_STYLES } from '../config/mapStyles';
+import MapTiles, { baseMapType } from '../components/map/MapTiles';
 import { useAppActive } from '../hooks/useAppActive';
 import {
   openAppSettings,
@@ -287,8 +286,7 @@ export default function MapScreen({
         ref={mapRef}
         style={styles.fill}
         initialRegion={INITIAL_REGION}
-        mapType={mapType}
-        customMapStyle={Platform.OS === 'android' && mapType === 'standard' ? MAP_STYLES[scheme] : []}
+        mapType={baseMapType(mapType)}
         userInterfaceStyle={scheme}
         mapPadding={{ top: topInset, right: 0, bottom: bottomInset + panelBottom, left: 0 }}
         showsCompass={false}
@@ -298,6 +296,7 @@ export default function MapScreen({
           if (navigating && following) setFollowing(false);
         }}
       >
+        <MapTiles mapType={mapType} />
         {location && <UserMarker location={location} active={live} />}
         {state.status !== 'idle' && (
           <RouteLayer route={readyRoute} destination={state.destination} />
