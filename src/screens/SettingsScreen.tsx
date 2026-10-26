@@ -1,9 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, type ComponentProps, type ReactNode } from 'react';
-import { Pressable, ScrollView, Text, View, type LayoutChangeEvent } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+  type LayoutChangeEvent,
+} from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import ProfileSection from '../components/profile/ProfileSection';
 import { openAppSettings, type LocationStatus } from '../hooks/useCurrentLocation';
 import { makeStyles, setThemeMode, useTheme, useThemeStore } from '../hooks/useTheme';
 import { SPRING } from '../motion';
@@ -52,15 +61,26 @@ export default function SettingsScreen({
   const { mode } = useThemeStore();
 
   return (
+    <KeyboardAvoidingView
+      style={styles.fill}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
     <ScrollView
       style={styles.fill}
+      keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       contentContainerStyle={[
         styles.content,
         { paddingTop: insets.top + 16, paddingBottom: insets.bottom + TAB_BAR_SPACE },
       ]}
     >
-      <Text style={styles.title}>Settings</Text>
+      <Text style={styles.title}>Profile</Text>
+
+      <Section title="Profile">
+        <View style={styles.profileBody}>
+          <ProfileSection />
+        </View>
+      </Section>
 
       <Section title="Appearance">
         <Segmented options={THEME_OPTIONS} value={mode} onChange={setThemeMode} />
@@ -87,6 +107,7 @@ export default function SettingsScreen({
         />
       </Section>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -203,6 +224,9 @@ const useStyles = makeStyles(({ colors }) => ({
   },
   section: {
     gap: 10,
+  },
+  profileBody: {
+    padding: 14,
   },
   sectionTitle: {
     fontSize: 12,
