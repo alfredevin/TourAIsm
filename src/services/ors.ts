@@ -43,7 +43,8 @@ export async function orsFetch(path: string, init: OrsRequest = {}): Promise<Res
 
   // The key goes in the query string, not an Authorization header: ORS's CORS rules reject that
   // header in browser preflight, which broke every request on web.
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  // Accept must be */*: the directions geojson endpoint answers 406 to application/json.
+  const headers: Record<string, string> = { Accept: '*/*' };
   const separator = path.includes('?') ? '&' : '?';
   const url = `${ORS_BASE_URL}${path}${separator}api_key=${encodeURIComponent(ORS_API_KEY)}`;
   if (init.body !== undefined) {
