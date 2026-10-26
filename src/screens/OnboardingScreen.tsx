@@ -27,6 +27,7 @@ import {
   LocationIllustration,
   MapRouteIllustration,
   RouteInputIllustration,
+  TeamIllustration,
   type IllustrationProps,
 } from '../components/illustrations';
 import { makeStyles, useTheme } from '../hooks/useTheme';
@@ -60,6 +61,13 @@ const SLIDES: Slide[] = [
     title: 'Route, distance, and time on the map',
     subtitle: 'See the road to your destination, along with the distance and estimated travel time.',
     Illustration: MapRouteIllustration,
+  },
+  {
+    key: 'team',
+    title: 'Built by Marinduque students',
+    subtitle:
+      'Three BSIS students at MarSU Santa Cruz, drawing on our SMART-MARSU campus project to bring mobile, backend, and AI integration to local commuters.',
+    Illustration: TeamIllustration,
   },
   {
     key: 'location',

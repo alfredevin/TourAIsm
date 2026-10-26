@@ -260,7 +260,62 @@ export function LocationIllustration({ active }: IllustrationProps) {
   );
 }
 
+const TEAM: { icon: IoniconName; name: string; role: string }[] = [
+  { icon: 'phone-portrait-outline', name: 'Rhea Nicole Recarro', role: 'Mobile & Frontend' },
+  { icon: 'server-outline', name: 'John Mark Dalumpienes', role: 'Backend & Database' },
+  { icon: 'sparkles-outline', name: 'Ashly Nicole Roldan', role: 'Project Lead & AI Integration' },
+];
+
+export function TeamIllustration({ active }: IllustrationProps) {
+  const { colors, shadows } = useTheme();
+  const styles = useStyles();
+  const cardStyle = useEntrance(active, 0);
+  const firstStyle = useEntrance(active, 150);
+  const secondStyle = useEntrance(active, 250);
+  const thirdStyle = useEntrance(active, 350);
+  const memberStyles = [firstStyle, secondStyle, thirdStyle];
+
+  return (
+    <View style={[styles.frame, { backgroundColor: colors.mapBackdrop }]}>
+      <MapBackdrop />
+      <View style={styles.centerStage}>
+        <Animated.View style={[styles.fareCard, shadows.card, cardStyle]}>
+          <Text style={styles.caption}>BSIS, Marinduque State University</Text>
+          {TEAM.map((member, index) => (
+            <Animated.View key={member.name} style={[styles.row, styles.teamRow, memberStyles[index]]}>
+              <View style={styles.iconBubble}>
+                <Ionicons name={member.icon} size={20} color={colors.primary} />
+              </View>
+              <View style={styles.teamText}>
+                <Text style={styles.teamName}>{member.name}</Text>
+                <Text style={styles.teamRole}>{member.role}</Text>
+              </View>
+            </Animated.View>
+          ))}
+        </Animated.View>
+      </View>
+    </View>
+  );
+}
+
 const useStyles = makeStyles(({ colors, shadows }) => ({
+  teamRow: {
+    marginTop: 14,
+  },
+  teamText: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  teamName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  teamRole: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: colors.muted,
+  },
   frame: {
     flex: 1,
     borderRadius: radius.card,

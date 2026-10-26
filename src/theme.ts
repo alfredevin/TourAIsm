@@ -1,6 +1,6 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 
-export const APP_NAME = 'tourAIsm';
+export const APP_NAME = 'TourAIsm';
 
 export type Scheme = 'light' | 'dark';
 export type ThemeMode = Scheme | 'system';

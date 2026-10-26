@@ -23,6 +23,9 @@ export const SERVICE_ERROR_MESSAGES: Record<ServiceErrorKind, string> = {
 const ORS_BASE_URL = 'https://api.openrouteservice.org';
 const ORS_API_KEY = process.env.EXPO_PUBLIC_ORS_API_KEY?.trim() ?? '';
 
+const MAX_ATTEMPTS = 3;
+const RETRY_STATUSES = new Set([500, 502, 503, 504]);
+
 type OrsRequest = {
   method?: 'GET' | 'POST';
   body?: unknown;
@@ -38,28 +41,34 @@ export async function orsFetch(path: string, init: OrsRequest = {}): Promise<Res
     throw new ServiceError('noKey', SERVICE_ERROR_MESSAGES.noKey);
   }
 
-  const headers: Record<string, string> = {
-    Authorization: ORS_API_KEY,
-    Accept: 'application/json',
-  };
+  // The key goes in the query string, not an Authorization header: ORS's CORS rules reject that
+  // header in browser preflight, which broke every request on web.
+  const headers: Record<string, string> = { Accept: 'application/json' };
+  const separator = path.includes('?') ? '&' : '?';
+  const url = `${ORS_BASE_URL}${path}${separator}api_key=${encodeURIComponent(ORS_API_KEY)}`;
   if (init.body !== undefined) {
     headers['Content-Type'] = 'application/json';
   }
 
-  devLog(`${label}: request`);
-  try {
-    const response = await fetch(`${ORS_BASE_URL}${path}`, {
-      method,
-      headers,
-      body: init.body === undefined ? undefined : JSON.stringify(init.body),
-      signal: init.signal,
-    });
-    devLog(`${label}: ${response.status}`);
-    return response;
-  } catch (error) {
-    if (init.signal?.aborted) throw error;
-    devLog(`${label}: network error`);
-    throw new ServiceError('network', SERVICE_ERROR_MESSAGES.network);
+  // The public ORS server is often slow and drops requests with a gateway error, so retry those.
+  for (let attempt = 1; ; attempt += 1) {
+    devLog(`${label}: request (attempt ${attempt})`);
+    try {
+      const response = await fetch(url, {
+        method,
+        headers,
+        body: init.body === undefined ? undefined : JSON.stringify(init.body),
+        signal: init.signal,
+      });
+      devLog(`${label}: ${response.status}`);
+      if (RETRY_STATUSES.has(response.status) && attempt < MAX_ATTEMPTS) continue;
+      return response;
+    } catch (error) {
+      if (init.signal?.aborted) throw error;
+      devLog(`${label}: network error`);
+      if (attempt < MAX_ATTEMPTS) continue;
+      throw new ServiceError('network', SERVICE_ERROR_MESSAGES.network);
+    }
   }
 }
 
