@@ -6,18 +6,21 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import ThemeTransition from './src/components/ThemeTransition';
 import AppShell from './src/navigation/AppShell';
+import AuthScreen from './src/screens/AuthScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
+import { loadAuth, useAuth } from './src/hooks/useAuth';
 import { loadProfile } from './src/hooks/useProfile';
 import { loadRewards } from './src/hooks/useRewards';
 import { loadTheme, useTheme } from './src/hooks/useTheme';
 
 const ONBOARDING_DONE_KEY = 'onboarding_done_v1';
 
-type Stage = 'loading' | 'onboarding' | 'home';
+type Stage = 'loading' | 'onboarding' | 'app';
 
 export default function App() {
   const [stage, setStage] = useState<Stage>('loading');
   const { colors } = useTheme();
+  const { session, loaded: authLoaded } = useAuth();
 
   useEffect(() => {
     void loadProfile();
@@ -28,7 +31,7 @@ export default function App() {
   }, []);
 
   const finishOnboarding = useCallback(() => {
-    setStage('home');
+    setStage('app');
     AsyncStorage.setItem(ONBOARDING_DONE_KEY, 'true').catch(() => undefined);
   }, []);
 
@@ -36,6 +39,10 @@ export default function App() {
     setStage('onboarding');
     AsyncStorage.removeItem(ONBOARDING_DONE_KEY).catch(() => undefined);
   }, []);
+
+  // Onboarding first, then the auth gate, then the app. Signing out returns to the gate.
+  const showAuth = stage === 'app' && authLoaded && !session;
+  const showApp = stage === 'app' && authLoaded && !!session;
 
   return (
     <SafeAreaProvider>
@@ -49,7 +56,16 @@ export default function App() {
             <OnboardingScreen onFinish={finishOnboarding} />
           </Animated.View>
         )}
-        {stage === 'home' && (
+        {showAuth && (
+          <Animated.View
+            style={styles.fill}
+            entering={FadeIn.duration(400)}
+            exiting={FadeOut.duration(250)}
+          >
+            <AuthScreen />
+          </Animated.View>
+        )}
+        {showApp && (
           <Animated.View
             style={styles.fill}
             entering={FadeIn.duration(500).delay(150)}
