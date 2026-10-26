@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "tourAIsm",
+    "name": "TourAIsm",
     "slug": "touraism",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,7 +25,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "tourAIsm uses your location to fill in your pickup point while the app is open."
+          "locationWhenInUsePermission": "TourAIsm uses your location to fill in your pickup point while the app is open."
         }
       ],
       "expo-font"

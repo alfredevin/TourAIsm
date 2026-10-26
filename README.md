@@ -1,4 +1,4 @@
-# tourAIsm
+# TourAIsm
 
 Mobile app for commuters in the Philippines. The app opens on a full-screen map after onboarding, with a bottom tab bar for Home, Map, Profile, and Settings.
 

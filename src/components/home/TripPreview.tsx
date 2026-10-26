@@ -1,11 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useMemo, useState, type ComponentProps } from 'react';
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 
 import { DEFAULT_CENTER } from '../../config/map';
-import { MAP_STYLES } from '../../config/mapStyles';
+import MapTiles, { baseMapType } from '../map/MapTiles';
 import type { UserLocation } from '../../hooks/useCurrentLocation';
 import type { RouteState } from '../../hooks/useRoute';
 import { makeStyles, useTheme } from '../../hooks/useTheme';
@@ -69,8 +69,7 @@ export default function TripPreview({
           <MapView
             style={StyleSheet.absoluteFill}
             region={region}
-            liteMode={Platform.OS === 'android'}
-            customMapStyle={Platform.OS === 'android' ? MAP_STYLES[scheme] : undefined}
+            mapType={baseMapType('standard')}
             userInterfaceStyle={scheme}
             scrollEnabled={false}
             zoomEnabled={false}
@@ -80,6 +79,7 @@ export default function TripPreview({
             showsCompass={false}
             moveOnMarkerPress={false}
           >
+            <MapTiles mapType="standard" />
             {location && <LocationDot coordinate={location} />}
             {route.status !== 'idle' && (
               <RouteLayer
