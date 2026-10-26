@@ -67,10 +67,24 @@ export async function loadProfile(): Promise<void> {
   setStore({ profile: parseProfile(raw), loaded: true });
 }
 
-export function updateProfile(patch: Partial<Profile>) {
-  const profile: Profile = { ...store.profile, ...patch };
+function commit(profile: Profile) {
   setStore({ profile, loaded: store.loaded });
   void AsyncStorage.setItem(PROFILE_KEY, JSON.stringify(profile)).catch(() => undefined);
+}
+
+export function updateProfile(patch: Partial<Profile>) {
+  commit({ ...store.profile, ...patch });
+}
+
+// Used by sync to apply the account's saved profile, or to clear it on log out.
+export function replaceProfile(profile: Profile) {
+  commit(profile);
+}
+
+export const subscribeProfile = subscribe;
+
+export function getProfile(): Profile {
+  return store.profile;
 }
 
 export function useProfile(): ProfileStore {

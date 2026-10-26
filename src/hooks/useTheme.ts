@@ -70,6 +70,12 @@ export function setDisplayedScheme(scheme: Scheme) {
   if (store.displayed !== scheme) setStore({ ...store, displayed: scheme });
 }
 
+export const subscribeTheme = subscribe;
+
+export function getThemeMode(): ThemeMode {
+  return store.mode;
+}
+
 export function useThemeStore(): ThemeStore {
   return useSyncExternalStore(subscribe, getSnapshot);
 }
