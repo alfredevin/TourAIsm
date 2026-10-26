@@ -8,6 +8,7 @@ import ThemeTransition from './src/components/ThemeTransition';
 import AppShell from './src/navigation/AppShell';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import { loadProfile } from './src/hooks/useProfile';
+import { loadRewards } from './src/hooks/useRewards';
 import { loadTheme, useTheme } from './src/hooks/useTheme';
 
 const ONBOARDING_DONE_KEY = 'onboarding_done_v1';
@@ -20,8 +21,9 @@ export default function App() {
 
   useEffect(() => {
     void loadProfile();
-    Promise.all([loadTheme(), AsyncStorage.getItem(ONBOARDING_DONE_KEY)])
-      .then(([, value]) => setStage(value === 'true' ? 'home' : 'onboarding'))
+    // Rewards load before the shell mounts so a check-in can't race the saved points.
+    Promise.all([loadTheme(), loadRewards(), AsyncStorage.getItem(ONBOARDING_DONE_KEY)])
+      .then(([, , value]) => setStage(value === 'true' ? 'home' : 'onboarding'))
       .catch(() => setStage('onboarding'));
   }, []);
 

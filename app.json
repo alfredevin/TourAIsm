@@ -28,7 +28,15 @@
           "locationWhenInUsePermission": "TourAIsm uses your location to fill in your pickup point while the app is open."
         }
       ],
-      "expo-font"
+      "expo-font",
+      ["expo-notifications", { "enableRemoteNotifications": false }],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "TourAIsm uses the microphone so you can ask the travel assistant by voice.",
+          "speechRecognitionPermission": "TourAIsm uses speech recognition to turn your voice into a message for the travel assistant."
+        }
+      ]
     ]
   }
 }

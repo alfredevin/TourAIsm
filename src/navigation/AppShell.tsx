@@ -2,8 +2,12 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import Chatbot from '../components/chat/Chatbot';
+import RewardToast from '../components/RewardToast';
 import { DEFAULT_CENTER } from '../config/map';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
+import { useDestinationCheckIn } from '../hooks/useDestinationCheckIn';
+import { useProximityAlerts } from '../hooks/useProximityAlerts';
 import { useMapLayout } from '../hooks/useMapLayout';
 import { loadRecentPlaces } from '../hooks/useRecentPlaces';
 import { useRoute } from '../hooks/useRoute';
@@ -30,6 +34,8 @@ export default function AppShell({ onResetOnboarding }: Props) {
   const origin = useMemo<LatLng>(() => location ?? DEFAULT_CENTER, [location]);
   const route = useRoute(origin);
   const { layout, toggleLayout, showLayout } = useMapLayout();
+  const { checkIn, dismiss: dismissCheckIn } = useDestinationCheckIn(location);
+  useProximityAlerts(location);
 
   // Navigation only runs while a route is ready. Clearing the route ends it.
   const navigating = navigationRequested && route.state.status === 'ready';
@@ -120,6 +126,8 @@ export default function AppShell({ onResetOnboarding }: Props) {
         />
       </TabPage>
       <TabBar active={tab} hidden={hideTabBar} onChange={setTab} />
+      <Chatbot origin={origin} hasLocation={location !== null} hidden={navigating} onOpenPlace={openPlace} />
+      <RewardToast checkIn={checkIn} onDismiss={dismissCheckIn} />
     </View>
   );
 }
