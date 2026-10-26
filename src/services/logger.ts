@@ -1,3 +1,3 @@
 export function devLog(message: string): void {
-  if (__DEV__) console.log(`[biyahe] ${message}`);
+  if (__DEV__) console.log(`[tourAIsm] ${message}`);
 }

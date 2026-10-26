@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "biyahe",
-    "slug": "biyahe",
+    "name": "tourAIsm",
+    "slug": "touraism",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Biyahe uses your location to fill in your pickup point while the app is open."
+          "locationWhenInUsePermission": "tourAIsm uses your location to fill in your pickup point while the app is open."
         }
       ],
       "expo-font"
