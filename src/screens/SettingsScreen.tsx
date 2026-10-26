@@ -13,6 +13,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ProfileSection from '../components/profile/ProfileSection';
+import { signOut } from '../hooks/useAuth';
 import { openAppSettings, type LocationStatus } from '../hooks/useCurrentLocation';
 import { makeStyles, setThemeMode, useTheme, useThemeStore } from '../hooks/useTheme';
 import { SPRING } from '../motion';
@@ -75,6 +76,16 @@ export default function SettingsScreen({
       ]}
     >
       <Text style={styles.title}>Profile</Text>
+
+      <Section title="Account">
+        <Action
+          label="Log out"
+          icon="log-out-outline"
+          danger
+          divider={false}
+          onPress={signOut}
+        />
+      </Section>
 
       <Section title="Profile">
         <View style={styles.profileBody}>
@@ -191,19 +202,31 @@ function Row({ icon, label, value }: { icon: IoniconName; label: string; value: 
   );
 }
 
-function Action({ icon, label, onPress }: { icon: IoniconName; label: string; onPress: () => void }) {
+function Action({
+  icon,
+  label,
+  onPress,
+  danger = false,
+  divider = true,
+}: {
+  icon: IoniconName;
+  label: string;
+  onPress: () => void;
+  danger?: boolean;
+  divider?: boolean;
+}) {
   const { colors } = useTheme();
   const styles = useStyles();
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => [styles.row, styles.rowDivider, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.row, divider && styles.rowDivider, pressed && styles.pressed]}
     >
-      <View style={styles.rowIcon}>
-        <Ionicons name={icon} size={18} color={colors.primary} />
+      <View style={[styles.rowIcon, danger && styles.rowIconDanger]}>
+        <Ionicons name={icon} size={18} color={danger ? colors.danger : colors.primary} />
       </View>
-      <Text style={styles.rowLabel}>{label}</Text>
+      <Text style={[styles.rowLabel, danger && styles.rowLabelDanger]}>{label}</Text>
       <Ionicons name="chevron-forward" size={18} color={colors.muted} />
     </Pressable>
   );
@@ -266,6 +289,12 @@ const useStyles = makeStyles(({ colors }) => ({
     fontSize: 15,
     fontWeight: '600',
     color: colors.text,
+  },
+  rowIconDanger: {
+    backgroundColor: colors.accentSoft,
+  },
+  rowLabelDanger: {
+    color: colors.danger,
   },
   rowValue: {
     fontSize: 14,

@@ -63,6 +63,19 @@ export function addRecentPlace(place: Place) {
   void AsyncStorage.setItem(RECENTS_KEY, JSON.stringify(next)).catch(() => undefined);
 }
 
+// Used by sync to apply the account's saved places, or to clear them on log out.
+export function replaceRecentPlaces(next: Place[]) {
+  const places = next.slice(0, MAX_RECENTS);
+  setRecents(places);
+  void AsyncStorage.setItem(RECENTS_KEY, JSON.stringify(places)).catch(() => undefined);
+}
+
+export const subscribeRecentPlaces = subscribe;
+
+export function getRecentPlaces(): Place[] {
+  return recents;
+}
+
 export function useRecentPlaces(): Place[] {
   return useSyncExternalStore(subscribe, getSnapshot);
 }
