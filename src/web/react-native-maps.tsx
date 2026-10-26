@@ -30,9 +30,12 @@ const OSM = {
   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   attribution: '&copy; OpenStreetMap contributors',
 };
+// Esri has no imagery past this zoom in rural areas; Leaflet scales the last level up instead.
+const SATELLITE_MAX_NATIVE_ZOOM = 17;
 const SATELLITE = {
   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   attribution: 'Tiles &copy; Esri',
+  maxNativeZoom: SATELLITE_MAX_NATIVE_ZOOM,
 };
 
 const MapContext = createContext<L.Map | null>(null);
@@ -113,6 +116,7 @@ const MapView = forwardRef<MapViewHandle, MapViewProps>(function MapView(
     tiles.current = L.tileLayer(source.url, {
       attribution: source.attribution,
       maxZoom: 19,
+      maxNativeZoom: 'maxNativeZoom' in source ? source.maxNativeZoom : 19,
     }).addTo(map);
   }, [map, mapType]);
 
