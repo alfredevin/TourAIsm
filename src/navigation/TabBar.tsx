@@ -20,7 +20,7 @@ import { typography } from '../theme';
 
 type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
-export type TabKey = 'home' | 'map' | 'profile' | 'settings';
+export type TabKey = 'home' | 'map' | 'settings';
 
 type Tab = {
   key: TabKey;
@@ -32,8 +32,7 @@ type Tab = {
 export const TABS: readonly Tab[] = [
   { key: 'home', label: 'Home', icon: 'home-outline', activeIcon: 'home' },
   { key: 'map', label: 'Map', icon: 'map-outline', activeIcon: 'map' },
-  { key: 'profile', label: 'Profile', icon: 'person-outline', activeIcon: 'person' },
-  { key: 'settings', label: 'Settings', icon: 'settings-outline', activeIcon: 'settings' },
+  { key: 'settings', label: 'Profile', icon: 'person-outline', activeIcon: 'person' },
 ];
 
 export const TAB_BAR_SPACE = 104;

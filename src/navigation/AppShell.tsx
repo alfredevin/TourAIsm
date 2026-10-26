@@ -9,7 +9,6 @@ import { loadRecentPlaces } from '../hooks/useRecentPlaces';
 import { useRoute } from '../hooks/useRoute';
 import MapScreen from '../screens/MapScreen';
 import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import type { Place } from '../services/places';
 import type { LatLng } from '../services/routing';
@@ -111,9 +110,6 @@ export default function AppShell({ onResetOnboarding }: Props) {
           onStartNavigation={startNavigation}
           onStopNavigation={stopNavigation}
         />
-      </TabPage>
-      <TabPage active={tab === 'profile'}>
-        <ProfileScreen />
       </TabPage>
       <TabPage active={tab === 'settings'}>
         <SettingsScreen

@@ -29,6 +29,7 @@ type EdgePadding = { top: number; right: number; bottom: number; left: number };
 const OSM = {
   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   attribution: '&copy; OpenStreetMap contributors',
+  maxNativeZoom: 19,
 };
 // Esri has no imagery past this zoom in rural areas; Leaflet scales the last level up instead.
 const SATELLITE_MAX_NATIVE_ZOOM = 17;
@@ -116,7 +117,7 @@ const MapView = forwardRef<MapViewHandle, MapViewProps>(function MapView(
     tiles.current = L.tileLayer(source.url, {
       attribution: source.attribution,
       maxZoom: 19,
-      maxNativeZoom: 'maxNativeZoom' in source ? source.maxNativeZoom : 19,
+      maxNativeZoom: source.maxNativeZoom,
     }).addTo(map);
   }, [map, mapType]);
 
