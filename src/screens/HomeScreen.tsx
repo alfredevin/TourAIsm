@@ -7,6 +7,7 @@ import SpriteCharacter, { type SpriteState } from '../components/character/Sprit
 import FareEstimator from '../components/home/FareEstimator';
 import HomeSection from '../components/home/HomeSection';
 import RecentPlaces from '../components/home/RecentPlaces';
+import RewardsCard from '../components/home/RewardsCard';
 import TipsRow from '../components/home/TipsRow';
 import TripPreview from '../components/home/TripPreview';
 import ThemeToggle from '../components/ThemeToggle';
@@ -133,11 +134,15 @@ export default function HomeScreen({
         </HomeSection>
       )}
 
-      <HomeSection active={active} delay={STAGGER_MS * 4} title="Fare estimator">
+      <HomeSection active={active} delay={STAGGER_MS * 4} title="Rewards">
+        <RewardsCard location={location} />
+      </HomeSection>
+
+      <HomeSection active={active} delay={STAGGER_MS * 5} title="Fare estimator">
         <FareEstimator />
       </HomeSection>
 
-      <HomeSection active={active} delay={STAGGER_MS * 5} title="Travel tips">
+      <HomeSection active={active} delay={STAGGER_MS * 6} title="Travel tips">
         <TipsRow />
       </HomeSection>
     </ScrollView>
